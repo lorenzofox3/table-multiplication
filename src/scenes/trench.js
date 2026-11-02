@@ -11,6 +11,12 @@ const SHIP_Y_RATIO = 0.8;
 const OBSTACLE_HOLD_RATIO = 0.42;
 const OBSTACLE_HIT_RATIO = 0.66;
 
+// Cruise speed is kept low and wall details soft: fast, high-contrast edges
+// sliding past the eye at the screen periphery cause motion sickness.
+const CRUISE_SPEED = 130; // px/s
+const REDUCED_SPEED = 70; // px/s
+const DT_SMOOTHING = 0.1; // exponential smoothing of frame time to avoid judder
+
 const easeInOut = (t) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 const linear = (t) => t;
 
@@ -22,10 +28,11 @@ export const createTrench = (canvas) => {
   let running = true;
   let frame = 0;
   let last = performance.now();
+  let smoothDt = 1 / 60;
 
   const state = {
     scroll: 0,
-    speed: 220, // px/s
+    speed: reduced ? REDUCED_SPEED : CRUISE_SPEED,
     ship: { x: 0, roll: 0, visible: true, blink: 0 },
     obstacle: null, // { y: ratio, gapSide: -1|1 }
     particles: [],
@@ -70,9 +77,9 @@ export const createTrench = (canvas) => {
     context.fillRect(left, 0, right - left, height);
 
     // floor panels scrolling down
-    const panel = 70;
+    const panel = 120;
     const offset = state.scroll % panel;
-    context.strokeStyle = 'rgba(120, 140, 180, 0.18)';
+    context.strokeStyle = 'rgba(120, 140, 180, 0.1)';
     context.lineWidth = 1;
     for (let y = offset - panel; y < height; y += panel) {
       context.beginPath();
@@ -85,23 +92,29 @@ export const createTrench = (canvas) => {
     context.lineTo(width / 2, height);
     context.stroke();
 
-    // walls (seen from above) with greebles
+    // walls (seen from above): long, low-contrast panels aligned in columns,
+    // so nothing flickers or jumps sideways as it scrolls by
     for (const [x0, x1, edge] of [
       [0, left, left],
       [right, width, right],
     ]) {
-      context.fillStyle = '#3a4152';
-      context.fillRect(x0, 0, x1 - x0, height);
-      const block = 46;
+      const wallWidth = x1 - x0;
+      context.fillStyle = '#363c4b';
+      context.fillRect(x0, 0, wallWidth, height);
+      const block = 140;
       const wallOffset = state.scroll % block;
+      const firstIndex = Math.floor(state.scroll / block);
       for (let y = wallOffset - block, i = 0; y < height; y += block, i++) {
-        const seed = Math.floor((state.scroll - wallOffset) / block) + i;
-        const w = ((seed * 37) % 5) + 3;
-        context.fillStyle = seed % 3 === 0 ? '#2a303d' : '#4a5266';
-        context.fillRect(x0 + ((seed * 13) % Math.max(1, x1 - x0 - 16)), y + 6, (x1 - x0) * 0.08 * w, block * 0.45);
-        if (seed % 7 === 0) {
-          context.fillStyle = '#ff6b4a';
-          context.fillRect(x0 + (x1 - x0) / 2 - 2, y + block / 2, 4, 4);
+        const seed = firstIndex - i + 1;
+        const wide = seed % 2 === 0;
+        context.fillStyle = wide ? '#3b4252' : '#323846';
+        const inset = wallWidth * (wide ? 0.18 : 0.3);
+        context.fillRect(x0 + inset, y + 10, wallWidth - inset * 2, block - 20);
+        if (seed % 5 === 0) {
+          context.fillStyle = 'rgba(255, 107, 74, 0.55)';
+          context.beginPath();
+          context.arc(x0 + wallWidth / 2, y + block / 2, 2.5, 0, Math.PI * 2);
+          context.fill();
         }
       }
       // wall edge shadow
@@ -257,8 +270,10 @@ export const createTrench = (canvas) => {
 
   const step = (now) => {
     if (!running) return;
-    const dt = Math.min(0.05, (now - last) / 1000);
+    const rawDt = Math.min(0.05, (now - last) / 1000);
     last = now;
+    smoothDt += (rawDt - smoothDt) * DT_SMOOTHING;
+    const dt = smoothDt;
     for (const t of tweens) {
       t.elapsed += dt * 1000;
       const k = Math.min(1, t.elapsed / t.duration);
@@ -291,6 +306,7 @@ export const createTrench = (canvas) => {
       if (running) return;
       running = true;
       last = performance.now();
+      smoothDt = 1 / 60;
       frame = requestAnimationFrame(step);
     },
 
@@ -328,10 +344,9 @@ export const createTrench = (canvas) => {
       sfx.explosion();
       explode(x, y);
       const savedSpeed = state.speed;
-      state.speed = 40;
-      await tween(obstacle, 'y', 1.15, 900, linear);
+      await Promise.all([tween(state, 'speed', savedSpeed * 0.25, 400), tween(obstacle, 'y', 1.15, 900, linear)]);
       state.obstacle = null;
-      state.speed = savedSpeed;
+      await tween(state, 'speed', savedSpeed, 600);
       state.ship.x = 0;
       state.ship.roll = 0;
       state.ship.visible = true;
