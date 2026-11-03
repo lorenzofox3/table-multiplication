@@ -1,5 +1,5 @@
 import * as sfx from '../audio.js';
-import { animate, bolt, createSvg, flash, glowFilter, shake, svgExplosion, wait } from './fx.js';
+import { animate, bolt, createSvg, SVG_NS, flash, glowFilter, shake, svgExplosion, wait } from './fx.js';
 
 /** Cockpit view with the targeting computer: lock the enemy fighter. */
 
@@ -11,6 +11,12 @@ const FIGHTER = { x: 180, y: 70 };
 const CANNONS = [
   { x: 40, y: 175 },
   { x: 320, y: 175 },
+];
+
+// where the enemy shots hit the canopy, on either side of the pilot
+const IMPACTS = [
+  { x: 120, y: 150 },
+  { x: 240, y: 150 },
 ];
 
 const WOBBLE = [
@@ -192,6 +198,24 @@ export const createTargeting = (host) => {
       ),
     );
 
+  // enemy shot coming straight at the pilot: grows as it gets closer
+  const incoming = (from, to) => {
+    const angle = (Math.atan2(to.y - from.y, to.x - from.x) * 180) / Math.PI;
+    const group = document.createElementNS(SVG_NS, 'g');
+    group.innerHTML = `
+      <line x1="-6" y1="0" x2="6" y2="0" stroke="#3dff6e" stroke-width="3" stroke-linecap="round" filter="url(#tg-glow)"/>
+      <line x1="-4" y1="0" x2="4" y2="0" stroke="#eaffef" stroke-width="1.2" stroke-linecap="round"/>`;
+    spaceShots.append(group);
+    return animate(
+      group,
+      [
+        { transform: `translate(${from.x}px, ${from.y}px) rotate(${angle}deg) scale(0.4)` },
+        { transform: `translate(${to.x}px, ${to.y}px) rotate(${angle}deg) scale(3)` },
+      ],
+      { duration: 280, easing: 'ease-in' },
+    ).then(() => group.remove());
+  };
+
   startWobble();
 
   return {
@@ -254,7 +278,15 @@ export const createTargeting = (host) => {
 
     async failure() {
       stopLock();
-      sfx.blaster();
+      // the fighter keeps weaving and fires back from its wings
+      const current = getComputedStyle(fighterShip).transform;
+      const ship = new DOMMatrix(current === 'none' ? undefined : current);
+      sfx.droidBlaster();
+      await Promise.all(
+        IMPACTS.map((to, i) =>
+          incoming({ x: FIGHTER.x + ship.e + (i ? 20 : -20), y: FIGHTER.y + ship.f }, to),
+        ),
+      );
       sfx.hit();
       await Promise.all([flash(host), shake(cockpit, 10, 500)]);
       await wait(200);
