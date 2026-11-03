@@ -44,7 +44,7 @@ A young apprentice holds a green laser sword. A spherical training drone hovers 
 - Correct: the drone fires, the apprentice deflects the bolt.
 - Miss: the bolt hits the apprentice (a flinch, a puff of smoke — nothing violent).
 
-Each Padawan round picks one of two views at random (50/50) and keeps it for all 10 questions.
+Each Padawan round picks one of three views at random (drone, levitation, pod race) and keeps it for all 10 questions.
 
 ### Padawan scene — Levitation
 
@@ -60,6 +60,28 @@ helmet, a dome-shaped maintenance droid and a boulder.
   into the handstand and lifts the objects back to their height.
 - 10/10: finale — the objects spin in a circle around the apprentice before the end screen.
 - Reduced motion: no wobble, bob or bounce; falls and flips are short fades; the finale is a slow glow.
+
+### Padawan scene — Pod race
+
+Cockpit view of a pod racer: two bulky engines ahead linked by a crackling energy beam, gloved hands on two throttle
+levers, a dashboard with a speed gauge. No rival pods. The track crosses four zones by question number:
+
+| Zone | Questions | Hazard (visible, never closer) | Miss | Damage mark |
+|---|---|---|---|---|
+| Desert | 1–3 | a rock tumbling on a dune | the rock bonks an engine | dent |
+| Cave | 4–6 | a pillar ahead | an engine scrapes the pillar (sparks, skid) | scratches |
+| Canyon | 7–8 | a goggled desert raider on the rim | one slow orange bolt hits an engine; the raider pumps the rifle | blast spot |
+| Arrival | 9–10 | the engine light flickers on the dashboard | the engine pops (bang, black smoke, cough) | burnt patch |
+
+- Waiting: calm cruise — roadside props slowly rush past, the pod sways, the hazard waits ahead.
+- Correct: boost (speed lines, whoosh) and the hazard is dodged (the raider's bolt goes wide, the light turns green).
+- Miss: comic hit and a short shake; the pod recovers on the next question. Hits alternate between the left and
+  right engines and leave a lasting mark. A thin smoke trail starts at the first miss and thickens at 3 and 5.
+- Zones change at the start of their first question: a cave mouth swallows the view, a bright opening leads into the
+  canyon, the canyon walls open onto the stadium.
+- Question 10 crosses the checkered finish line (boosting, or coasting and smoking after a miss); the crowd cheers.
+  At 10/10, fireworks burst over the stands and a golden trophy pops up in the cockpit.
+- Reduced motion: still props, no sway or shake, cross-fades between zones, soft flashes for hits, glows for fireworks.
 
 ### Avancé scene (first person)
 

@@ -17,6 +17,14 @@ export const animate = (element, keyframes, options) => {
   );
 };
 
+/** Runs an animation, then writes its final keyframe into the inline style so later animations start from it. */
+export const settle = async (element, keyframes, options) => {
+  const animation = await animate(element, keyframes, options);
+  const { offset: _offset, easing: _easing, ...last } = keyframes.at(-1);
+  Object.assign(element.style, last);
+  animation?.cancel();
+};
+
 /** Builds an SVG element from markup. */
 export const svgFragment = (markup) => {
   const template = document.createElementNS(SVG_NS, 'g');

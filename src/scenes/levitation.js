@@ -1,6 +1,6 @@
 import * as sfx from '../audio.js';
 import { ROUND_LENGTH } from '../game/round.js';
-import { SVG_NS, animate, createSvg, glowFilter, prefersReducedMotion, wait } from './fx.js';
+import { SVG_NS, animate, createSvg, glowFilter, prefersReducedMotion, settle, wait } from './fx.js';
 
 /**
  * Padawan "levitation" scene: an alien apprentice in a one-hand handstand lifts objects with the Force.
@@ -211,14 +211,6 @@ const markup = `
 
   ${OBJECTS.map(objectGroup).join('')}
 `;
-
-/** Runs an animation, then writes its final keyframe into the inline style so later animations start from it. */
-const settle = async (element, keyframes, options) => {
-  const animation = await animate(element, keyframes, options);
-  const { offset: _offset, easing: _easing, ...last } = keyframes.at(-1);
-  Object.assign(element.style, last);
-  animation?.cancel();
-};
 
 /**
  * @param {HTMLElement} host

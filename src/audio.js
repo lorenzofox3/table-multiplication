@@ -167,3 +167,78 @@ export const oof = () =>
     osc.start(t);
     osc.stop(t + 0.32);
   });
+
+/** Pod engines revving up: a low filtered sawtooth swell. */
+export const rev = () =>
+  play((audio, t) => {
+    const osc = audio.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(55, t);
+    osc.frequency.exponentialRampToValueAtTime(120, t + 0.35);
+    osc.frequency.exponentialRampToValueAtTime(85, t + 0.7);
+    const filter = audio.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 500;
+    const gain = envelope(audio, t, { attack: 0.08, hold: 0.3, release: 0.35, peak: 0.35 });
+    osc.connect(filter).connect(gain);
+    osc.start(t);
+    osc.stop(t + 0.8);
+  });
+
+/** Cartoon "bonk": a hollow knock. */
+export const bonk = () =>
+  play((audio, t) => {
+    tone(audio, t, { type: 'triangle', from: 520, to: 160, duration: 0.16, peak: 0.6 });
+    tone(audio, t + 0.02, { type: 'sine', from: 900, to: 300, duration: 0.08, peak: 0.25 });
+  });
+
+/** Metal scraping on rock: a wobbling high squeal over grit. */
+export const screech = () =>
+  play((audio, t) => {
+    const osc = audio.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(1500, t);
+    for (let i = 1; i <= 6; i++) osc.frequency.linearRampToValueAtTime(i % 2 ? 1250 : 1550, t + i * 0.07);
+    const filter = audio.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 1700;
+    filter.Q.value = 4;
+    const gain = envelope(audio, t, { attack: 0.02, hold: 0.3, release: 0.15, peak: 0.25 });
+    osc.connect(filter).connect(gain);
+    osc.start(t);
+    osc.stop(t + 0.5);
+    noise(audio, t, { duration: 0.45, filterFrom: 5000, filterTo: 2500, peak: 0.25 });
+  });
+
+/** Engine blowout: a short cartoon "bang". */
+export const bang = () =>
+  play((audio, t) => {
+    noise(audio, t, { duration: 0.4, filterFrom: 2500, filterTo: 150, peak: 0.8 });
+    tone(audio, t, { type: 'sine', from: 180, to: 50, duration: 0.3, peak: 0.6 });
+  });
+
+/** Sputtering engine: three coughs, each lower. */
+export const cough = () =>
+  play((audio, t) => {
+    [0, 0.22, 0.48].forEach((delay, i) => {
+      noise(audio, t + delay, { duration: 0.12, filterFrom: 900 - i * 200, filterTo: 200, peak: 0.45 });
+      tone(audio, t + delay, { type: 'square', from: 110 - i * 15, to: 70, duration: 0.1, peak: 0.12 });
+    });
+  });
+
+/** Crowd cheering: a band of noise swelling and fading, with a few whistles. */
+export const cheer = () =>
+  play((audio, t) => {
+    noise(audio, t, { duration: 1.8, filterFrom: 1800, filterTo: 900, peak: 0.35 });
+    [0.2, 0.55, 0.9].forEach((delay, i) =>
+      tone(audio, t + delay, { type: 'sine', from: 1800 + i * 250, to: 2600 + i * 200, duration: 0.25, peak: 0.08 }),
+    );
+  });
+
+/** Firework: a whistle up, then a crackling pop. */
+export const firework = () =>
+  play((audio, t) => {
+    tone(audio, t, { type: 'sine', from: 600, to: 1800, duration: 0.35, peak: 0.12 });
+    noise(audio, t + 0.35, { duration: 0.5, filterFrom: 4000, filterTo: 400, peak: 0.5 });
+    tone(audio, t + 0.35, { type: 'sine', from: 140, to: 50, duration: 0.25, peak: 0.4 });
+  });

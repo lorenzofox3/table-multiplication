@@ -1,6 +1,7 @@
 import { createJediScene } from '../scenes/jedi.js';
 import { createLevitationScene, MAX_LEVEL } from '../scenes/levitation.js';
 import { createPadawanScene } from '../scenes/padawan.js';
+import { createRaceScene, ZONES } from '../scenes/race.js';
 import { createTroopersScene } from '../scenes/troopers.js';
 import { h } from '../ui/dom.js';
 import { backBar } from './common.js';
@@ -9,6 +10,7 @@ import { backBar } from './common.js';
 const SCENES = {
   padawan: createPadawanScene,
   levitation: createLevitationScene,
+  race: createRaceScene,
   troopers: createTroopersScene,
   jedi: createJediScene,
 };
@@ -19,6 +21,7 @@ export const debugScreen = (_, { navigate }) => {
   let scene = null;
   let busy = false;
   let kind = 'standard';
+  let zone = 0;
 
   const mount = (name, options = {}) => {
     scene?.destroy();
@@ -65,6 +68,18 @@ export const debugScreen = (_, { navigate }) => {
       button('failure', run('failure', () => scene.failure())),
       button('finale 10/10', run('finale', () => {
         mount('levitation', { level: MAX_LEVEL - 1 });
+        return scene.success();
+      })),
+      button('race: next zone', run('next zone', () => {
+        // mount just before the zone starts so the next present plays the transition into it
+        zone = (zone + 1) % ZONES.length;
+        const start = ZONES.slice(0, zone).reduce((sum, z) => sum + z.questions, 0);
+        mount('race', { question: start });
+        return scene.present({});
+      })),
+      button('race: finish 10/10', run('race finish', async () => {
+        mount('race', { question: 9, successes: 9 });
+        await scene.present({});
         return scene.success();
       })),
     ),
