@@ -1,4 +1,5 @@
 import { createJediScene } from '../scenes/jedi.js';
+import { createLevitationScene, MAX_LEVEL } from '../scenes/levitation.js';
 import { createPadawanScene } from '../scenes/padawan.js';
 import { createTroopersScene } from '../scenes/troopers.js';
 import { h } from '../ui/dom.js';
@@ -7,6 +8,7 @@ import { backBar } from './common.js';
 /** Plays scene animations on demand to tune them without playing a round (?debug). */
 const SCENES = {
   padawan: createPadawanScene,
+  levitation: createLevitationScene,
   troopers: createTroopersScene,
   jedi: createJediScene,
 };
@@ -18,10 +20,10 @@ export const debugScreen = (_, { navigate }) => {
   let busy = false;
   let kind = 'standard';
 
-  const mount = (name) => {
+  const mount = (name, options = {}) => {
     scene?.destroy();
     host.innerHTML = '';
-    scene = SCENES[name](host, {});
+    scene = SCENES[name](host, options);
     kind = 'standard';
     log.textContent = name;
   };
@@ -61,6 +63,10 @@ export const debugScreen = (_, { navigate }) => {
       button('threat ∞', run('threat', () => scene.threat(null))),
       button('success', run('success', () => scene.success())),
       button('failure', run('failure', () => scene.failure())),
+      button('finale 10/10', run('finale', () => {
+        mount('levitation', { level: MAX_LEVEL - 1 });
+        return scene.success();
+      })),
     ),
   );
 

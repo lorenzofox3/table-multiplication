@@ -44,6 +44,23 @@ A young apprentice holds a green laser sword. A spherical training drone hovers 
 - Correct: the drone fires, the apprentice deflects the bolt.
 - Miss: the bolt hits the apprentice (a flinch, a puff of smoke — nothing violent).
 
+Each Padawan round picks one of two views at random (50/50) and keeps it for all 10 questions.
+
+### Padawan scene — Levitation
+
+A small alien apprentice (teal skin, pointed ears, dark topknot, deep-blue outfit with a gold sash) holds a
+one-hand handstand, the other hand reaching toward four floating objects: a cargo crate, a visored training
+helmet, a dome-shaped maintenance droid and a boulder.
+- Height = number of correct answers: on the floor at 0, one step higher per correct answer, the highest object
+  just under the ceiling at 10. A miss never removes height.
+- Waiting: the objects bob out of sync, Force ripples from the raised hand, eyes closed in concentration.
+- Correct: hand pulse, teal shimmer, the whole group floats up one step ("whoosh").
+- Miss: the apprentice wobbles and tumbles to a sitting position ("oof", comic, nothing painful); the objects crash
+  down with a thud, a bounce and dust, the droid looks worried. On the next question the apprentice flips back
+  into the handstand and lifts the objects back to their height.
+- 10/10: finale — the objects spin in a circle around the apprentice before the end screen.
+- Reduced motion: no wobble, bob or bounce; falls and flips are short fades; the finale is a slow glow.
+
 ### Avancé scene (first person)
 
 A squad of 3–4 white-armoured troopers in a corridor. Each question, one trooper steps forward and aims

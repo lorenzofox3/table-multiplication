@@ -143,3 +143,27 @@ export const fanfare = () =>
       tone(audio, t + i * 0.12, { type: 'triangle', from: f, duration: i === 3 ? 0.6 : 0.16, peak: 0.3 }),
     );
   });
+
+/** Heavy object landing on the floor: a low thump. */
+export const thud = () =>
+  play((audio, t) => {
+    tone(audio, t, { type: 'sine', from: 150, to: 45, duration: 0.22, peak: 0.7 });
+    noise(audio, t, { duration: 0.14, filterFrom: 900, filterTo: 120, peak: 0.35 });
+  });
+
+/** Comic "oof": a short voiced drop through a vowel-like filter. */
+export const oof = () =>
+  play((audio, t) => {
+    const osc = audio.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(330, t);
+    osc.frequency.exponentialRampToValueAtTime(190, t + 0.22);
+    const filter = audio.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 700;
+    filter.Q.value = 3;
+    const gain = envelope(audio, t, { attack: 0.02, hold: 0.06, release: 0.18, peak: 0.45 });
+    osc.connect(filter).connect(gain);
+    osc.start(t);
+    osc.stop(t + 0.32);
+  });

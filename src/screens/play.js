@@ -3,6 +3,7 @@ import { pick, createRng } from '../game/random.js';
 import { createRound, ROUND_LENGTH } from '../game/round.js';
 import { t } from '../i18n.js';
 import { createJediScene } from '../scenes/jedi.js';
+import { createLevitationScene } from '../scenes/levitation.js';
 import { createPadawanScene } from '../scenes/padawan.js';
 import { createTroopersScene } from '../scenes/troopers.js';
 import { wait } from '../scenes/fx.js';
@@ -17,7 +18,8 @@ const CORRECTION_MS = 1600;
 const ABORTED = Symbol('aborted');
 
 const SCENES = {
-  padawan: createPadawanScene,
+  // one of the two Padawan views, picked once per round
+  padawan: (host, options) => pick(options.rng, [createPadawanScene, createLevitationScene])(host, options),
   advanced: createTroopersScene,
   jedi: createJediScene,
 };
