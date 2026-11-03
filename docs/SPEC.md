@@ -69,7 +69,7 @@ levers, a dashboard with a speed gauge. No rival pods. The track crosses four zo
 | Zone | Questions | Hazard (visible, never closer) | Miss | Damage mark |
 |---|---|---|---|---|
 | Desert | 1–3 | a rock tumbling on a dune | the rock bonks an engine | dent |
-| Cave | 4–6 | a pillar ahead | an engine scrapes the pillar (sparks, skid) | scratches |
+| Cave | 4–6 | a big stalactite ahead | an engine scrapes the stalactite (sparks, skid) | scratches |
 | Canyon | 7–8 | a goggled desert raider on the rim | one slow orange bolt hits an engine; the raider pumps the rifle | blast spot |
 | Arrival | 9–10 | the engine light flickers on the dashboard | the engine pops (bang, black smoke, cough) | burnt patch |
 

@@ -55,7 +55,7 @@ const NEEDLE = { x: 180, y: 274, cruise: -40, boost: 55 };
 const RAIDER = { x: 60, y: 37, scale: 1.3 };
 const RIFLE_TIP = { x: RAIDER.x + 22 * RAIDER.scale, y: RAIDER.y - 6 * RAIDER.scale };
 const ROCK_HOME = { x: 236, y: 91 };
-const PILLAR_HOME = { x: 205, y: 130 };
+const COLUMN_HOME = { x: 205, y: 130 };
 const MARK_SLOTS = [
   [-19, -15],
   [19, -14],
@@ -161,11 +161,12 @@ const cave = `
     ${crystal(40, 70, '#6ef0ff', 1.2, 20)}${crystal(78, 175, '#c18cff', 1.4, -10)}${crystal(108, 98, '#6ef0ff', 0.8, 15)}
     ${crystal(312, 60, '#c18cff', 1.2, -20)}${crystal(286, 170, '#6ef0ff', 1.3, 8)}${crystal(252, 102, '#c18cff', 0.8, -12)}
     ${propsMarkup('cave')}
-    <g data-part="pillar" style="transform: ${place(PILLAR_HOME.x, PILLAR_HOME.y)}">
-      <path d="M-9 0 L-6 -8 L-6 -52 L-9 -60 L9 -60 L6 -52 L6 -8 L9 0 Z" fill="#7a6690" stroke="#140e1b" stroke-width="1"/>
-      <path d="M-2.5 -8 V-52" stroke="#a38fbd" stroke-width="2"/>
-      <path d="M3 -12 V-48" stroke="#5b4970" stroke-width="1.5"/>
-      <path d="M3 -30 L5 -36 L7 -30 Z" fill="#6ef0ff" filter="url(#rc-glow)"/>
+    <g data-part="column" style="transform: ${place(COLUMN_HOME.x, COLUMN_HOME.y)}">
+      <path d="M-16 -60 Q-13 -52 -10 -44 Q-7 -34 -5 -25 Q-3 -15 0 -6 Q3 -15 5 -26 Q7 -37 10 -46 Q13 -53 17 -60 Z" fill="#6a5880" stroke="#140e1b" stroke-width="1"/>
+      <path d="M-8 -58 Q-5 -42 -1.5 -16" stroke="#a38fbd" stroke-width="2" fill="none"/>
+      <path d="M-12 -52 Q1 -49 13 -52 M-8 -40 Q1 -37 8 -40 M-5 -28 Q1 -26 5 -28" stroke="#5b4970" stroke-width="1.2" fill="none"/>
+      <ellipse cx="0" cy="-3.5" rx="1.4" ry="2" fill="#8f7aa8"/>
+      <path d="M4 -48 L6 -54 L8 -48 Z" fill="#6ef0ff" filter="url(#rc-glow)"/>
     </g>
   </g>`;
 
@@ -511,7 +512,7 @@ export const createRaceScene = (host, { question: startQuestion = 0, successes: 
         );
       }
     } else if (shown === 'cave') {
-      await fadeIn(part('pillar'), place(PILLAR_HOME.x, PILLAR_HOME.y));
+      await fadeIn(part('column'), place(COLUMN_HOME.x, COLUMN_HOME.y));
     } else if (shown === 'canyon') {
       hazardLoops.push(run(part('glint'), [{ opacity: 1 }, { opacity: 0.1 }, { opacity: 1 }], { duration: 1600, iterations: Infinity }));
     } else if (shown === 'arrival') {
@@ -683,10 +684,10 @@ export const createRaceScene = (host, { question: startQuestion = 0, successes: 
       ]);
     },
     async cave(engine, side) {
-      const pillar = part('pillar');
+      const column = part('column');
       const edge = { x: engine.x + side * 32, y: engine.y + 4 };
       if (!reduced) {
-        await settle(pillar, [{ transform: place(PILLAR_HOME.x, PILLAR_HOME.y) }, { transform: place(engine.x + side * 52, 300, 4.6) }], {
+        await settle(column, [{ transform: place(COLUMN_HOME.x, COLUMN_HOME.y) }, { transform: place(engine.x + side * 52, 300, 4.6) }], {
           duration: 520,
           easing: 'ease-in',
         });
@@ -697,9 +698,9 @@ export const createRaceScene = (host, { question: startQuestion = 0, successes: 
         wait(140).then(() => sparks(fx, { x: edge.x, y: edge.y - 14 }, { count: 8 })),
         jolt(engine),
         reduced
-          ? fadeOut(pillar)
+          ? fadeOut(column)
           : Promise.all([
-              settle(pillar, [{ transform: place(engine.x + side * 52, 300, 4.6), opacity: 1 }, { transform: place(engine.x + side * 120, 440, 7), opacity: 0 }], { duration: 380, easing: 'linear' }),
+              settle(column, [{ transform: place(engine.x + side * 52, 300, 4.6), opacity: 1 }, { transform: place(engine.x + side * 120, 440, 7), opacity: 0 }], { duration: 380, easing: 'linear' }),
               animate(steer, [{ transform: 'translate(0px, 0px)' }, { transform: `translate(${-side * 16}px, 0px) rotate(${side * 4}deg)`, offset: 0.4 }, { transform: 'translate(0px, 0px)' }], {
                 duration: 650,
                 fill: 'none',
@@ -752,14 +753,14 @@ export const createRaceScene = (host, { question: startQuestion = 0, successes: 
       rock.style.opacity = '0';
     },
     async cave() {
-      const pillar = part('pillar');
+      const column = part('column');
       await Promise.all([
         swerve(-1),
         reduced
-          ? fadeOut(pillar)
-          : settle(pillar, [{ transform: place(PILLAR_HOME.x, PILLAR_HOME.y), opacity: 1 }, { transform: place(470, 420, 7), opacity: 0.8 }], { duration: 600, easing: 'ease-in' }),
+          ? fadeOut(column)
+          : settle(column, [{ transform: place(COLUMN_HOME.x, COLUMN_HOME.y), opacity: 1 }, { transform: place(470, 420, 7), opacity: 0.8 }], { duration: 600, easing: 'ease-in' }),
       ]);
-      pillar.style.opacity = '0';
+      column.style.opacity = '0';
     },
     async canyon() {
       sound(sfx.blaster);
