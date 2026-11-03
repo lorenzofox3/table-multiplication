@@ -5,6 +5,7 @@ import { t } from '../i18n.js';
 import { createJediScene } from '../scenes/jedi.js';
 import { createLevitationScene } from '../scenes/levitation.js';
 import { createPadawanScene } from '../scenes/padawan.js';
+import { createPlainsScene } from '../scenes/plains.js';
 import { createRaceScene } from '../scenes/race.js';
 import { createTroopersScene } from '../scenes/troopers.js';
 import { wait } from '../scenes/fx.js';
@@ -21,7 +22,8 @@ const ABORTED = Symbol('aborted');
 const SCENES = {
   // one of the three Padawan views, picked once per round
   padawan: (host, options) => pick(options.rng, [createPadawanScene, createLevitationScene, createRaceScene])(host, options),
-  advanced: createTroopersScene,
+  // one of the two Advanced worlds, picked once per round
+  advanced: (host, options) => pick(options.rng, [createTroopersScene, createPlainsScene])(host, options),
   jedi: createJediScene,
 };
 

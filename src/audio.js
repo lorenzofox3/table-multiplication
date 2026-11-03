@@ -242,3 +242,60 @@ export const firework = () =>
     noise(audio, t + 0.35, { duration: 0.5, filterFrom: 4000, filterTo: 400, peak: 0.5 });
     tone(audio, t + 0.35, { type: 'sine', from: 140, to: 50, duration: 0.25, peak: 0.4 });
   });
+
+/** Energy ball thrown: a short rising rush of air. */
+export const toss = () =>
+  play((audio, t) => {
+    noise(audio, t, { duration: 0.28, filterFrom: 500, filterTo: 3500, peak: 0.35 });
+    tone(audio, t, { type: 'sine', from: 300, to: 700, duration: 0.2, peak: 0.12 });
+  });
+
+/** Electric burst: a buzzing, wobbling sawtooth over a crackle. */
+export const zap = () =>
+  play((audio, t) => {
+    const osc = audio.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(240, t);
+    for (let i = 1; i <= 8; i++) osc.frequency.linearRampToValueAtTime(i % 2 ? 420 : 200, t + i * 0.045);
+    const filter = audio.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 1400;
+    filter.Q.value = 2;
+    const gain = envelope(audio, t, { attack: 0.01, hold: 0.25, release: 0.15, peak: 0.35 });
+    osc.connect(filter).connect(gain);
+    osc.start(t);
+    osc.stop(t + 0.45);
+    noise(audio, t, { duration: 0.4, filterFrom: 7000, filterTo: 2500, peak: 0.3 });
+  });
+
+/** Cartoon "boing": a springy pitch wobble. */
+export const boing = () =>
+  play((audio, t) => {
+    const osc = audio.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(180, t);
+    osc.frequency.exponentialRampToValueAtTime(520, t + 0.08);
+    for (let i = 1; i <= 6; i++) osc.frequency.linearRampToValueAtTime(i % 2 ? 380 : 470, t + 0.08 + i * 0.05);
+    const gain = envelope(audio, t, { attack: 0.01, hold: 0.15, release: 0.25, peak: 0.4 });
+    osc.connect(gain);
+    osc.start(t);
+    osc.stop(t + 0.5);
+  });
+
+/** Droid blaster: a thinner, higher "pew" than the troopers'. */
+export const droidBlaster = () =>
+  play((audio, t) => tone(audio, t, { type: 'square', from: 2400, to: 520, duration: 0.12, peak: 0.18 }));
+
+/** Metal foot on the ground: a short clank. */
+export const clank = () =>
+  play((audio, t) => {
+    tone(audio, t, { type: 'triangle', from: 820, to: 640, duration: 0.05, peak: 0.12 });
+    noise(audio, t, { duration: 0.05, filterFrom: 6000, filterTo: 3000, peak: 0.1 });
+  });
+
+/** A new energy ball forming: a soft rising fizz. */
+export const fizz = () =>
+  play((audio, t) => {
+    noise(audio, t, { duration: 0.35, filterFrom: 2500, filterTo: 7000, peak: 0.18 });
+    tone(audio, t, { type: 'sine', from: 500, to: 1100, duration: 0.3, peak: 0.08 });
+  });

@@ -1,6 +1,7 @@
 import { createJediScene } from '../scenes/jedi.js';
 import { createLevitationScene, MAX_LEVEL } from '../scenes/levitation.js';
 import { createPadawanScene } from '../scenes/padawan.js';
+import { createPlainsScene } from '../scenes/plains.js';
 import { createRaceScene, ZONES } from '../scenes/race.js';
 import { createTroopersScene } from '../scenes/troopers.js';
 import { h } from '../ui/dom.js';
@@ -12,6 +13,7 @@ const SCENES = {
   levitation: createLevitationScene,
   race: createRaceScene,
   troopers: createTroopersScene,
+  plains: createPlainsScene,
   jedi: createJediScene,
 };
 
@@ -81,6 +83,13 @@ export const debugScreen = (_, { navigate }) => {
         mount('race', { question: 9, successes: 9 });
         await scene.present({});
         return scene.success();
+      })),
+      button('plains: next wave', run('next wave', async () => {
+        // one droid left: knock it down, then the next present marches a new wave over the hill
+        mount('plains', { remaining: 1 });
+        await scene.present({});
+        await scene.success();
+        return scene.present({});
       })),
     ),
   );

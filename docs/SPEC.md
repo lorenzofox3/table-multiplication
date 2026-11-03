@@ -90,6 +90,25 @@ A squad of 3–4 white-armoured troopers in a corridor. Each question, one troop
 - Correct: the bolt is deflected back, the trooper falls. When the squad is down, a new wave arrives.
 - Miss: red flash + shake + 0.5 s fade to black, then respawn. In Die hard: "Tu es tombé…" and the score.
 
+Each Avancé round (Normal or Die hard) picks one of two worlds at random (troopers, plains) and keeps it for the
+whole round.
+
+### Avancé scene — Plains
+
+A sunny grassy plain with rolling hills, mossy stone ruins, swamp reeds in the foreground and a faint shimmering
+energy shield arcing overhead. The player's webbed, teal-green hand (leather bracer) holds a glowing blue-green
+energy ball at the bottom of the view. Four original droids per wave (lanky, sand-coloured, round head with one red
+eye-lens and an antenna, blaster rifle) stand at the trooper positions; droids on the left are mirrored so every
+rifle points at the player.
+- Each question: one droid steps forward and raises its rifle; a red dashed sight thickens with the timer while its
+  eye-lens brightens.
+- Correct: wind-up and overarm throw; the ball arcs onto the droid and bursts into blue-green electric arcs, the droid
+  jitters, its head pops off ("boing") and the body folds into a heap that fades. A new ball fizzes into the hand.
+- Miss: the droid's red bolt hits the hand, the ball drops and fizzles in the grass, then red flash + shake + fade to
+  black; a new ball is in hand and the droid steps back into line.
+- Wave cleared: a chime, then four new droids march over the hill crest to their spots.
+- Reduced motion: no sway, pulse or jitter; arcs and the head pop become a soft glow and fade; waves fade in.
+
 ### Jedi scene
 
 A starfighter flies in a trench, **viewed from above**. No steering: the answer is the only input.
